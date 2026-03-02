@@ -34,6 +34,7 @@ export class AppController {
     init(): void {
         this.view.bindCreate(this.handleCreatePost);
         this.view.bindReact(this.handleReact);
+        this.view.bindDelete(this.handleDeletePost);
         this.fetchPosts();
     }
 
@@ -89,6 +90,25 @@ export class AppController {
         } catch (error) {
             console.error('Ошибка при добавлении реакции:', error);
             this.view.showMessage('Не удалось добавить реакцию.');
+        }
+    };
+
+    // Обработчик удаления поста
+    private handleDeletePost = async (postId: number): Promise<void> => {
+        try {
+            const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // После успешного удаления, получаем обновленный список постов
+            await this.fetchPosts();
+        } catch (error) {
+            console.error('Ошибка при удалении поста:', error);
+            this.view.showMessage('Не удалось удалить пост.');
         }
     };
 }

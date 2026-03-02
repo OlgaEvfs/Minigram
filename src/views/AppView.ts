@@ -2,6 +2,7 @@ import { Post, ReactionType } from '../models/Post.js';
 
 type CreateHandler = (imageUrl: string, caption: string) => void;
 type ReactHandler = (postId: number, reaction: ReactionType) => void;
+type DeleteHandler = (postId: number) => void;
 
 // Представление: отвечает за DOM, формы и вывод ленты
 export class AppView {
@@ -10,6 +11,7 @@ export class AppView {
     private message: HTMLElement;
     private createHandler?: CreateHandler;
     private reactHandler?: ReactHandler;
+    private deleteHandler?: DeleteHandler;
 
     constructor(private root: HTMLElement) {
         // Базовая разметка приложения
@@ -49,6 +51,11 @@ export class AppView {
     // Подписка контроллера на событие реакции
     bindReact(handler: ReactHandler): void {
         this.reactHandler = handler;
+    }
+
+    // Подписка контроллера на событие удаления
+    bindDelete(handler: DeleteHandler): void {
+        this.deleteHandler = handler;
     }
 
     // Показать сообщение об ошибке/подсказке
@@ -94,13 +101,25 @@ export class AppView {
             </div>
             <div class="post-body">
                 <p class="caption">${post.caption}</p>
-                <div class="reactions">
-                    ${this.reactionButton(post, 'like', 'Like', post.like)}
-                    ${this.reactionButton(post, 'wow', 'Wow', post.wow)}
-                    ${this.reactionButton(post, 'laugh', 'Haha', post.laugh)}
+                <div class="actions">
+                    <div class="reactions">
+                        ${this.reactionButton(post, 'like', 'Like', post.like)}
+                        ${this.reactionButton(post, 'wow', 'Wow', post.wow)}
+                        ${this.reactionButton(post, 'laugh', 'Haha', post.laugh)}
+                    </div>
+                    <button class="delete-button" data-post-id="${post.id}">Delete</button>
                 </div>
             </div>
         `;
+
+        // Кнопка удаления
+        const deleteBtn = container.querySelector('.delete-button');
+        deleteBtn?.addEventListener('click', () => {
+            if (confirm('Delete this post?')) {
+                const postId = Number((deleteBtn as HTMLElement).dataset.postId);
+                this.deleteHandler?.(postId);
+            }
+        });
 
         // Навешиваем обработчики на кнопки реакций
         const buttons = container.querySelectorAll('[data-reaction]');

@@ -119,26 +119,27 @@ body {
 
 .actions {
   display: flex;
-  justify-content: space-between; /* Распределяет элементы по краям */
-  align-items: center; /* Выравнивает элементы по центру по вертикали */
-  gap: 12px; /* Пространство между кнопкой удаления и реакциями */
-  flex-wrap: wrap; /* Для адаптивности на маленьких экранах */
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .delete-button {
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: #dc2626; /* Красный цвет для кнопки удаления */
+  background: #dc2626;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 120ms ease, transform 120ms ease;
-  white-space: nowrap; /* Предотвращает перенос текста кнопки */
+  white-space: nowrap;
 }
 
 .delete-button:hover {
-  background: #b91c1c; /* Темнее красный при наведении */
+  background: #b91c1c;
   transform: translateY(-1px);
 }
 
